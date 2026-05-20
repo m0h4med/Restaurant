@@ -1,0 +1,412 @@
+
+<h2 class="sr-only">لوحة دراسة الجدوى التفاعلية — مشروع مطعم ومبيعات مواشي</h2>
+<style>
+.tbtn{cursor:pointer;padding:7px 15px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;font-size:12px;color:var(--color-text-secondary);transition:all .15s;}
+.tbtn.on{background:#1F3864;color:#fff;border-color:#1F3864;}
+.ftab{display:none;}.ftab.on{display:block;}
+.srow{display:flex;align-items:center;gap:8px;margin-bottom:7px;padding:7px 10px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);}
+.srow.meal{border:1px solid #C4A84F;background:#FFFBF0;}
+.srow label{font-size:12px;color:var(--color-text-secondary);flex:0 0 155px;text-align:right;}
+.srow input[type=range]{flex:1;min-width:0;}
+.sval{font-size:12px;font-weight:500;color:var(--color-text-primary);min-width:90px;text-align:left;font-variant-numeric:tabular-nums;direction:ltr;}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:14px;}
+.kcard{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;}
+.klbl{font-size:11px;color:var(--color-text-secondary);margin-bottom:3px;}
+.kval{font-size:19px;font-weight:500;}
+.ksub{font-size:10px;color:var(--color-text-secondary);margin-top:2px;}
+.plr{display:flex;justify-content:space-between;align-items:center;padding:5px 10px;font-size:12px;border-radius:4px;margin:2px 0;}
+.plr.sub{color:var(--color-text-secondary);font-size:11px;}
+.plr.tot{font-weight:500;background:var(--color-background-secondary);}
+.plr.gp{font-weight:500;background:#E2EFDA;color:#2E5218;}
+.plr.np{font-weight:500;background:#BDD7EE;color:#0C447C;}
+.plr.ys{font-weight:500;background:#C6EFCE;color:#1D6F42;}
+.plr.ls{font-weight:500;background:#FCEBEB;color:#A32D2D;}
+.sh{font-size:13px;font-weight:500;color:#1F3864;margin:14px 0 8px;padding-bottom:4px;border-bottom:2px solid #C4A84F;}
+.heat{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:18px;}
+.heat th{padding:6px 7px;text-align:center;font-size:10px;background:#1F3864;color:#fff;font-weight:500;white-space:nowrap;}
+.heat td{padding:5px 7px;text-align:center;font-size:11px;font-weight:500;border:0.5px solid var(--color-border-tertiary);white-space:nowrap;}
+.heat .rh{background:var(--color-background-secondary)!important;color:var(--color-text-secondary)!important;text-align:right;padding-right:8px;}
+.scgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;}
+.sccard{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:10px;}
+.sctitle{font-size:11px;font-weight:500;padding:3px 8px;border-radius:4px;text-align:center;margin-bottom:8px;}
+.scrow{display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);}
+.scrow:last-child{border:none;font-weight:500;color:var(--color-text-primary);}
+.legend-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--color-text-secondary);}
+.legend-sq{width:10px;height:10px;border-radius:2px;display:inline-block;}
+</style>
+
+<div style="padding:.25rem 0;" dir="rtl">
+
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+  <div style="width:4px;height:28px;background:#1F3864;border-radius:2px;flex-shrink:0;"></div>
+  <div style="flex:1;">
+    <div style="font-size:15px;font-weight:500;color:var(--color-text-primary);">لوحة دراسة الجدوى التفاعلية</div>
+    <div style="font-size:10px;color:var(--color-text-secondary);" dir="ltr">Feasibility Study — Livestock, Poultry & Meals | All figures in SAR</div>
+  </div>
+  <div id="live-badge" style="font-size:11px;padding:4px 10px;border-radius:12px;background:#E2EFDA;color:#375623;font-weight:500;">مباشر ⚡</div>
+</div>
+
+<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
+  <button class="tbtn on" onclick="sw('inputs',this)">المدخلات</button>
+  <button class="tbtn" onclick="sw('pl',this)">قائمة الدخل</button>
+  <button class="tbtn" onclick="sw('sens',this)">الحساسية</button>
+  <button class="tbtn" onclick="sw('scen',this)">السيناريوهات</button>
+</div>
+
+<!-- ═══ INPUTS ═══ -->
+<div id="tab-inputs" class="ftab on">
+  <div class="sh">📦 حجم المبيعات الشهرية</div>
+  <div class="srow"><label>دجاج شهري</label><input type="range" min="500" max="10000" step="100" id="r-chicken" oninput="set('chicken',+this.value)"><span class="sval" id="v-chicken">2,100 وحدة</span></div>
+  <div class="srow"><label>خرفان شهري</label><input type="range" min="10" max="500" step="5" id="r-sheep" oninput="set('sheep',+this.value)"><span class="sval" id="v-sheep">60 وحدة</span></div>
+  <div class="srow"><label>تيوس شهري</label><input type="range" min="5" max="200" step="5" id="r-goat" oninput="set('goat',+this.value)"><span class="sval" id="v-goat">30 وحدة</span></div>
+  <div class="srow meal"><label>🍽️ وجبات يومياً</label><input type="range" min="10" max="500" step="5" id="r-meals" oninput="set('meals',+this.value)"><span class="sval" id="v-meals">70 وجبة/يوم</span></div>
+
+  <div class="sh">💰 أسعار البيع (SAR، قبل الضريبة)</div>
+  <div class="srow"><label>سعر بيع الدجاجة</label><input type="range" min="25" max="80" step="1" id="r-pc" oninput="set('pc',+this.value)"><span class="sval" id="v-pc">40 SAR</span></div>
+  <div class="srow"><label>سعر بيع الخروف</label><input type="range" min="1500" max="3500" step="50" id="r-ps" oninput="set('ps',+this.value)"><span class="sval" id="v-ps">2,043 SAR</span></div>
+  <div class="srow"><label>سعر بيع التيس</label><input type="range" min="800" max="2500" step="50" id="r-pg" oninput="set('pg',+this.value)"><span class="sval" id="v-pg">1,470 SAR</span></div>
+  <div class="srow meal"><label>🍽️ سعر الوجبة الواحدة</label><input type="range" min="15" max="150" step="5" id="r-pm" oninput="set('pm',+this.value)"><span class="sval" id="v-pm">45 SAR</span></div>
+
+  <div class="sh">🛒 تكاليف البضاعة / وحدة (COGS)</div>
+  <div class="srow"><label>تكلفة الدجاجة</label><input type="range" min="10" max="40" step="0.5" id="r-cc" oninput="set('cc',+this.value)"><span class="sval" id="v-cc">22.7 SAR</span></div>
+  <div class="srow"><label>تكلفة الخروف</label><input type="range" min="1400" max="2500" step="25" id="r-cs" oninput="set('cs',+this.value)"><span class="sval" id="v-cs">1,975 SAR</span></div>
+  <div class="srow"><label>تكلفة التيس</label><input type="range" min="700" max="1800" step="25" id="r-cg" oninput="set('cg',+this.value)"><span class="sval" id="v-cg">1,175 SAR</span></div>
+  <div class="srow meal"><label>🍽️ تكلفة الوجبة الواحدة</label><input type="range" min="8" max="80" step="2" id="r-cm" oninput="set('cm',+this.value)"><span class="sval" id="v-cm">18 SAR</span></div>
+
+  <div class="sh">👷 العمالة</div>
+  <div class="srow"><label>رواتب أساسية – مطعم</label><input type="range" min="10000" max="60000" step="1000" id="r-rb" oninput="set('rb',+this.value)"><span class="sval" id="v-rb">24,000 SAR</span></div>
+  <div class="srow"><label>رواتب أساسية – مطبخ</label><input type="range" min="3000" max="25000" step="500" id="r-kb" oninput="set('kb',+this.value)"><span class="sval" id="v-kb">9,000 SAR</span></div>
+  <div class="srow"><label>معامل تكلفة العامل</label><input type="range" min="150" max="350" step="5" id="r-lm" oninput="set('lm',+this.value/100)"><span class="sval" id="v-lm">2.42×</span></div>
+  <div class="srow" style="background:var(--color-background-secondary);opacity:.7;"><label>إجمالي تكلفة العمالة (محسوب)</label><input type="range" disabled style="flex:1;opacity:.2;"><span class="sval" id="v-lt" style="color:#C00000;">—</span></div>
+
+  <div class="sh">🏢 المصاريف الثابتة الشهرية</div>
+  <div class="srow"><label>إيجار</label><input type="range" min="2000" max="25000" step="200" id="r-rn" oninput="set('rn',+this.value)"><span class="sval" id="v-rn">6,800 SAR</span></div>
+  <div class="srow"><label>كهرباء وماء</label><input type="range" min="500" max="10000" step="100" id="r-ut" oninput="set('ut',+this.value)"><span class="sval" id="v-ut">3,500 SAR</span></div>
+  <div class="srow"><label>استهلاك سيارات</label><input type="range" min="0" max="5000" step="100" id="r-dp" oninput="set('dp',+this.value)"><span class="sval" id="v-dp">1,000 SAR</span></div>
+  <div class="srow"><label>مخالفات بلدية</label><input type="range" min="0" max="3000" step="100" id="r-fn" oninput="set('fn',+this.value)"><span class="sval" id="v-fn">500 SAR</span></div>
+
+  <div class="sh">🤝 الشريك والاستثمار</div>
+  <div class="srow"><label>راتب الشريك الثابت</label><input type="range" min="0" max="12000" step="500" id="r-psal" oninput="set('psal',+this.value)"><span class="sval" id="v-psal">4,000 SAR</span></div>
+  <div class="srow"><label>نسبة الشريك من الأرباح</label><input type="range" min="0" max="50" step="5" id="r-ppct" oninput="set('ppct',+this.value/100)"><span class="sval" id="v-ppct">25%</span></div>
+  <div class="srow"><label>قيمة الاستثمار</label><input type="range" min="200000" max="800000" step="25000" id="r-inv" oninput="set('inv',+this.value)"><span class="sval" id="v-inv">450,000 SAR</span></div>
+</div>
+
+<!-- ═══ P&L ═══ -->
+<div id="tab-pl" class="ftab">
+  <div class="kgrid" id="kpis"></div>
+  <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:14px;">
+    <div>
+      <div class="sh">قائمة الدخل الشهرية</div>
+      <div id="pl-body"></div>
+    </div>
+    <div>
+      <div class="sh">توزيع الإيرادات</div>
+      <div style="position:relative;height:180px;">
+        <canvas id="donut-c" role="img" aria-label="Revenue breakdown donut chart"></canvas>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;justify-content:center;" id="rev-legend"></div>
+    </div>
+  </div>
+  <div class="sh" style="margin-top:18px;">صافي حصتك — مقارنة السيناريوهات</div>
+  <div style="position:relative;height:220px;">
+    <canvas id="bar-c" role="img" aria-label="Scenario comparison bar chart"></canvas>
+  </div>
+</div>
+
+<!-- ═══ SENSITIVITY ═══ -->
+<div id="tab-sens" class="ftab">
+  <div class="sh">جدول أ — وجبات يومية × راتب الشريك → صافي حصتك الشهري (SAR)</div>
+  <div style="overflow-x:auto;"><table class="heat" id="s-a"></table></div>
+
+  <div class="sh">جدول ب — دجاج شهري × وجبات يومية → صافي حصتك الشهري (SAR)</div>
+  <div style="overflow-x:auto;"><table class="heat" id="s-b"></table></div>
+
+  <div class="sh">جدول ج — تغيير سعر البيع × تغيير تكلفة المواد → هامش مجمل الربح %</div>
+  <div style="overflow-x:auto;"><table class="heat" id="s-c"></table></div>
+
+  <div class="sh">جدول د — قيمة الاستثمار × السيناريو → فترة الاسترداد (أشهر)</div>
+  <div style="overflow-x:auto;"><table class="heat" id="s-d"></table></div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;">
+    <span class="legend-pill"><span class="legend-sq" style="background:#FCEBEB;border:1px solid #F09595;"></span>خسارة</span>
+    <span class="legend-pill"><span class="legend-sq" style="background:#FAEEDA;border:1px solid #EF9F27;"></span>منخفض</span>
+    <span class="legend-pill"><span class="legend-sq" style="background:#FFF2CC;border:1px solid #C9A84C;"></span>متوسط</span>
+    <span class="legend-pill"><span class="legend-sq" style="background:#E2EFDA;border:1px solid #70AD47;"></span>جيد</span>
+    <span class="legend-pill"><span class="legend-sq" style="background:#C6EFCE;border:1px solid #375623;"></span>ممتاز</span>
+  </div>
+</div>
+
+<!-- ═══ SCENARIOS ═══ -->
+<div id="tab-scen" class="ftab">
+  <div class="sh">مقارنة السيناريوهات (معامل تعديل المبيعات والوجبات)</div>
+  <div class="scgrid" id="scen-cards"></div>
+  <div class="sh" style="margin-top:18px;">مقارنة بيانية</div>
+  <div style="position:relative;height:250px;">
+    <canvas id="scen-c" role="img" aria-label="Scenario comparison chart"></canvas>
+  </div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const S = {
+  chicken:2100,sheep:60,goat:30,meals:70,
+  pc:40,ps:2043,pg:1470,pm:45,
+  cc:22.7,cs:1975,cg:1175,cm:18,
+  rb:24000,kb:9000,lm:2.42,
+  rn:6800,ut:3500,dp:1000,fn:500,
+  psal:4000,ppct:0.25,inv:450000
+};
+
+const FMTS={
+  chicken:v=>n(v)+' وحدة',sheep:v=>n(v)+' وحدة',goat:v=>n(v)+' وحدة',
+  meals:v=>n(v)+' وجبة/يوم',
+  pc:v=>n(v)+' SAR',ps:v=>n(v)+' SAR',pg:v=>n(v)+' SAR',pm:v=>n(v)+' SAR',
+  cc:v=>v.toFixed(1)+' SAR',cs:v=>n(v)+' SAR',cg:v=>n(v)+' SAR',cm:v=>n(v)+' SAR',
+  rb:v=>n(v)+' SAR',kb:v=>n(v)+' SAR',lm:v=>v.toFixed(2)+'×',
+  rn:v=>n(v)+' SAR',ut:v=>n(v)+' SAR',dp:v=>n(v)+' SAR',fn:v=>n(v)+' SAR',
+  psal:v=>n(v)+' SAR',ppct:v=>(v*100).toFixed(0)+'%',inv:v=>n(v)+' SAR'
+};
+
+function n(v,d=0){return v.toLocaleString('en',{minimumFractionDigits:d,maximumFractionDigits:d});}
+function pct(v){return(v*100).toFixed(1)+'%';}
+
+function calc(o){
+  const mm=o.meals*30;
+  const rC=o.chicken*o.pc,rS=o.sheep*o.ps,rG=o.goat*o.pg,rM=mm*o.pm;
+  const rev=rC+rS+rG+rM;
+  const cC=o.chicken*o.cc,cS=o.sheep*o.cs,cG=o.goat*o.cg,cM=mm*o.cm;
+  const cogs=cC+cS+cG+cM;
+  const gross=rev-cogs;
+  const gm=rev>0?gross/rev:0;
+  const lab=(o.rb+o.kb)*o.lm;
+  const fix=o.rn+o.ut+o.dp+o.fn;
+  const opex=lab+fix+o.psal;
+  const net=gross-opex;
+  const pPr=net>0?net*o.ppct:0;
+  const yours=net>0?net*(1-o.ppct):0;
+  const pb=yours>0?o.inv/yours:null;
+  const roi=yours>0?(yours*12)/o.inv:0;
+  return{mm,rC,rS,rG,rM,rev,cC,cS,cG,cM,cogs,gross,gm,lab,fix,opex,net,pPr,yours,pb,roi,pTotal:o.psal+pPr};
+}
+
+function hP(v){
+  if(v<=0)return{b:'#FCEBEB',c:'#A32D2D'};
+  if(v<3000)return{b:'#FAEEDA',c:'#854F0B'};
+  if(v<8000)return{b:'#FFF2CC',c:'#7B5700'};
+  if(v<15000)return{b:'#E2EFDA',c:'#3B6D11'};
+  return{b:'#C6EFCE',c:'#1D6F42'};
+}
+function hPb(v){
+  if(v===null)return{b:'#FCEBEB',c:'#A32D2D'};
+  if(v<=12)return{b:'#C6EFCE',c:'#1D6F42'};
+  if(v<=24)return{b:'#E2EFDA',c:'#3B6D11'};
+  if(v<=36)return{b:'#FFF2CC',c:'#7B5700'};
+  if(v<=60)return{b:'#FAEEDA',c:'#854F0B'};
+  return{b:'#FCEBEB',c:'#A32D2D'};
+}
+function hGm(v){
+  if(v<0)return{b:'#FCEBEB',c:'#A32D2D'};
+  if(v<0.1)return{b:'#FAEEDA',c:'#854F0B'};
+  if(v<0.2)return{b:'#FFF2CC',c:'#7B5700'};
+  if(v<0.35)return{b:'#E2EFDA',c:'#3B6D11'};
+  return{b:'#C6EFCE',c:'#1D6F42'};
+}
+
+let dChart=null,bChart=null,sChart=null;
+
+function set(key,val){
+  S[key]=val;
+  const ve=document.getElementById('v-'+key);
+  if(ve&&FMTS[key])ve.textContent=FMTS[key](val);
+  update();
+}
+
+function update(){
+  const R=calc(S);
+  const lte=document.getElementById('v-lt');
+  if(lte)lte.textContent=n(R.lab)+' SAR';
+
+  const ki=document.getElementById('kpis');
+  if(ki){
+    const yc=R.yours>0?'#1D6F42':'#A32D2D';
+    const rc=R.roi>0.2?'#1D6F42':R.roi>0?'#7B5700':'#A32D2D';
+    ki.innerHTML=`
+    <div class="kcard"><div class="klbl">ربحك الشهري</div><div class="kval" style="color:${yc};">${R.yours>0?n(R.yours):'خسارة'}</div><div class="ksub">SAR / شهر</div></div>
+    <div class="kcard"><div class="klbl">ربحك السنوي</div><div class="kval" style="color:${yc};">${R.yours>0?n(R.yours*12):'—'}</div><div class="ksub">SAR / سنة</div></div>
+    <div class="kcard"><div class="klbl">فترة الاسترداد</div><div class="kval">${R.pb?n(R.pb,1):'—'}</div><div class="ksub">${R.pb?'شهر | '+n(R.pb/12,1)+' سنة':'—'}</div></div>
+    <div class="kcard"><div class="klbl">ROI سنوي</div><div class="kval" style="color:${rc};">${pct(R.roi)}</div><div class="ksub">على ${n(S.inv)} SAR</div></div>
+    <div class="kcard"><div class="klbl">هامش الربح الإجمالي</div><div class="kval">${pct(R.gm)}</div><div class="ksub">gross ÷ revenue</div></div>
+    <div class="kcard"><div class="klbl">إجمالي الإيرادات</div><div class="kval">${n(R.rev)}</div><div class="ksub">SAR / شهر</div></div>`;
+  }
+
+  const pb=document.getElementById('pl-body');
+  if(pb){
+    const rows=[
+      ['إيراد الدجاج',R.rC,'sub'],['إيراد الخرفان',R.rS,'sub'],['إيراد التيوس',R.rG,'sub'],
+      [`إيراد الوجبات (${n(R.mm)} وجبة)`,R.rM,'sub'],['إجمالي الإيرادات',R.rev,'tot'],
+      null,
+      ['تكلفة الدجاج',R.cC,'sub'],['تكلفة الخرفان',R.cS,'sub'],['تكلفة التيوس',R.cG,'sub'],
+      ['تكلفة الوجبات',R.cM,'sub'],['إجمالي تكلفة البضاعة',R.cogs,'tot'],
+      null,
+      ['مجمل الربح',R.gross,R.gross>0?'gp':'ls'],['هامش مجمل الربح',pct(R.gm),'gp'],
+      null,
+      ['تكلفة العمالة الكاملة',R.lab,'sub'],['مصاريف ثابتة',R.fix,'sub'],
+      ['راتب الشريك',S.psal,'sub'],['إجمالي المصاريف التشغيلية',R.opex,'tot'],
+      null,
+      ['صافي الربح',R.net,R.net>0?'np':'ls'],
+      ['حصة الشريك من الأرباح',R.pPr,'sub'],['إجمالي مستحقات الشريك',R.pTotal,'sub'],
+      ['صافي حصتك',R.yours,R.yours>0?'ys':'ls'],
+    ];
+    pb.innerHTML=rows.map(r=>{
+      if(!r)return'<div style="height:6px;"></div>';
+      const isStr=typeof r[1]==='string';
+      return`<div class="plr ${r[2]}"><span>${r[0]}</span><span dir="ltr">${isStr?r[1]:n(r[1])}</span></div>`;
+    }).join('');
+  }
+
+  const dc=document.getElementById('donut-c');
+  if(dc&&dc.offsetParent!==null){
+    const data=[R.rC,R.rS,R.rG,R.rM];
+    const lbls=['دجاج','خرفان','تيوس','وجبات'];
+    const clrs=['#2F5496','#375623','#C9A84C','#C00000'];
+    if(dChart)dChart.destroy();
+    dChart=new Chart(dc,{type:'doughnut',data:{labels:lbls,datasets:[{data,backgroundColor:clrs,borderWidth:2,borderColor:'#fff'}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+n(c.parsed)+' SAR'}}}}});
+    const rl=document.getElementById('rev-legend');
+    if(rl)rl.innerHTML=lbls.map((l,i)=>`<span class="legend-pill"><span class="legend-sq" style="background:${clrs[i]};"></span>${l}: ${n(data[i])}</span>`).join('');
+  }
+
+  const bc=document.getElementById('bar-c');
+  if(bc&&bc.offsetParent!==null){
+    const ms=[0.6,0.8,1.0,1.5,2.0];
+    const lbs=['60%','80%','100%','150%','200%'];
+    const vals=ms.map(m=>{const o={...S,chicken:Math.round(S.chicken*m),sheep:Math.round(S.sheep*m),goat:Math.round(S.goat*m),meals:Math.round(S.meals*m)};return Math.round(calc(o).yours);});
+    if(bChart)bChart.destroy();
+    bChart=new Chart(bc,{type:'bar',data:{labels:lbs,datasets:[{label:'صافي حصتك الشهري',data:vals,backgroundColor:vals.map(v=>v>0?'#375623':'#C00000'),borderRadius:4}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' SAR '+n(c.parsed.y)}}},
+      scales:{y:{ticks:{callback:v=>n(v)},grid:{color:'rgba(0,0,0,0.05)'}},x:{ticks:{font:{size:10}}}}}});
+  }
+
+  buildSA();buildSB();buildSC();buildSD();buildScen();
+}
+
+function buildSA(){
+  const el=document.getElementById('s-a');if(!el)return;
+  const mRows=[10,20,30,50,70,100,150,200,300];
+  const pCols=[0,2000,4000,6000,8000,10000];
+  let h='<thead><tr><th>وجبات/يوم</th>'+pCols.map(p=>`<th>راتب شريك<br>${n(p)}</th>`).join('')+'</tr></thead><tbody>';
+  mRows.forEach(m=>{
+    h+=`<tr><td class="rh">${m} وجبة</td>`;
+    pCols.forEach(p=>{const o={...S,meals:m,psal:p};const r=calc(o);const{b,c}=hP(r.yours);h+=`<td style="background:${b};color:${c};">${r.yours>0?n(r.yours):'خسارة'}</td>`;});
+    h+='</tr>';
+  });
+  el.innerHTML=h+'</tbody>';
+}
+
+function buildSB(){
+  const el=document.getElementById('s-b');if(!el)return;
+  const cRows=[500,1000,2100,3000,4500,6000,8000,10000];
+  const mCols=[10,30,50,70,100,150,200,300];
+  let h='<thead><tr><th>دجاج شهري</th>'+mCols.map(m=>`<th>${m}<br>وجبة/يوم</th>`).join('')+'</tr></thead><tbody>';
+  cRows.forEach(c=>{
+    h+=`<tr><td class="rh">${n(c)} دجاجة</td>`;
+    mCols.forEach(m=>{const o={...S,chicken:c,meals:m};const r=calc(o);const{b,cl}=hP(r.yours);const col=hP(r.yours);h+=`<td style="background:${col.b};color:${col.c};">${r.yours>0?n(r.yours):'خسارة'}</td>`;});
+    h+='</tr>';
+  });
+  el.innerHTML=h+'</tbody>';
+}
+
+function buildSC(){
+  const el=document.getElementById('s-c');if(!el)return;
+  const pR=[-0.15,-0.10,-0.05,0,0.05,0.10,0.15,0.20];
+  const cC=[-0.15,-0.10,0,0.10,0.20,0.30];
+  let h='<thead><tr><th>سعر / تكلفة</th>'+cC.map(c=>`<th>تكلفة<br>${c>=0?'+':''}${(c*100).toFixed(0)}%</th>`).join('')+'</tr></thead><tbody>';
+  pR.forEach(p=>{
+    h+=`<tr><td class="rh">سعر ${p>=0?'+':''}${(p*100).toFixed(0)}%</td>`;
+    cC.forEach(c=>{
+      const mm=S.meals*30;const ap=1+p;const ac=1+c;
+      const rv=S.chicken*S.pc*ap+S.sheep*S.ps*ap+S.goat*S.pg*ap+mm*S.pm*ap;
+      const cg2=S.chicken*S.cc*ac+S.sheep*S.cs*ac+S.goat*S.cg*ac+mm*S.cm*ac;
+      const gm=rv>0?(rv-cg2)/rv:0;
+      const{b,c:col}=hGm(gm);h+=`<td style="background:${b};color:${col};">${pct(gm)}</td>`;
+    });
+    h+='</tr>';
+  });
+  el.innerHTML=h+'</tbody>';
+}
+
+function buildSD(){
+  const el=document.getElementById('s-d');if(!el)return;
+  const invs=[250000,350000,400000,450000,500000,600000,750000];
+  const ms=[0.6,0.8,1.0,1.5,2.0];
+  const ml=['محافظ','معتدل','حالي','مستهدف','متفائل'];
+  let h='<thead><tr><th>استثمار (SAR)</th>'+ml.map(l=>`<th>${l}</th>`).join('')+'</tr></thead><tbody>';
+  invs.forEach(inv=>{
+    h+=`<tr><td class="rh">${n(inv)}</td>`;
+    ms.forEach(m=>{
+      const o={...S,chicken:Math.round(S.chicken*m),sheep:Math.round(S.sheep*m),goat:Math.round(S.goat*m),meals:Math.round(S.meals*m)};
+      const r=calc(o);const pb=r.yours>0?inv/r.yours:null;
+      const{b,c}=hPb(pb);h+=`<td style="background:${b};color:${c};">${pb?n(pb,1)+' ش':'خسارة'}</td>`;
+    });
+    h+='</tr>';
+  });
+  el.innerHTML=h+'</tbody>';
+}
+
+function buildScen(){
+  const el=document.getElementById('scen-cards');if(!el)return;
+  const sc=[
+    {l:'متحفظ',m:0.6,b:'#FCEBEB',t:'#A32D2D'},
+    {l:'محافظ',m:0.8,b:'#FAEEDA',t:'#854F0B'},
+    {l:'حالي',m:1.0,b:'#BDD7EE',t:'#0C447C'},
+    {l:'مستهدف',m:1.5,b:'#E2EFDA',t:'#375623'},
+    {l:'متفائل',m:2.0,b:'#C6EFCE',t:'#1D6F42'},
+  ];
+  el.innerHTML=sc.map(s=>{
+    const o={...S,chicken:Math.round(S.chicken*s.m),sheep:Math.round(S.sheep*s.m),goat:Math.round(S.goat*s.m),meals:Math.round(S.meals*s.m)};
+    const r=calc(o);
+    return`<div class="sccard">
+      <div class="sctitle" style="background:${s.b};color:${s.t};">${s.l} ${(s.m*100).toFixed(0)}%</div>
+      <div class="scrow"><span>دجاج</span><span dir="ltr">${n(o.chicken)}</span></div>
+      <div class="scrow"><span>وجبات/يوم</span><span dir="ltr">${n(o.meals)}</span></div>
+      <div class="scrow"><span>الإيرادات</span><span dir="ltr">${n(r.rev)}</span></div>
+      <div class="scrow"><span>هامش الربح</span><span dir="ltr">${pct(r.gm)}</span></div>
+      <div class="scrow"><span>صافي الربح</span><span dir="ltr">${n(r.net)}</span></div>
+      <div class="scrow"><span>حصتك الشهرية</span><span dir="ltr" style="color:${r.yours>0?'#375623':'#C00000'};font-weight:500;">${r.yours>0?n(r.yours):'خسارة'}</span></div>
+      <div class="scrow"><span>فترة الاسترداد</span><span dir="ltr">${r.pb?n(r.pb,1)+' شهر':'—'}</span></div>
+      <div class="scrow"><span>ROI سنوي</span><span dir="ltr">${pct(r.roi)}</span></div>
+    </div>`;
+  }).join('');
+
+  const sce=document.getElementById('scen-c');
+  if(sce&&sce.offsetParent!==null){
+    const lbs=sc.map(s=>s.l+' '+(s.m*100).toFixed(0)+'%');
+    const yn=sc.map(s=>{const o={...S,chicken:Math.round(S.chicken*s.m),sheep:Math.round(S.sheep*s.m),goat:Math.round(S.goat*s.m),meals:Math.round(S.meals*s.m)};return Math.round(calc(o).yours);});
+    const rv=sc.map(s=>{const o={...S,chicken:Math.round(S.chicken*s.m),sheep:Math.round(S.sheep*s.m),goat:Math.round(S.goat*s.m),meals:Math.round(S.meals*s.m)};return Math.round(calc(o).rev);});
+    if(sChart)sChart.destroy();
+    sChart=new Chart(sce,{type:'bar',
+      data:{labels:lbs,datasets:[{label:'الإيرادات',data:rv,backgroundColor:'#BDD7EE',borderRadius:3,order:2},{label:'حصتك الشهرية',data:yn,backgroundColor:yn.map(v=>v>0?'#375623':'#C00000'),borderRadius:3,order:1}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,labels:{font:{size:11},usePointStyle:true}},tooltip:{callbacks:{label:c=>' SAR '+n(c.parsed.y)}}},
+        scales:{y:{ticks:{callback:v=>n(v)},grid:{color:'rgba(0,0,0,0.04)'}},x:{ticks:{font:{size:10}}}}}});
+  }
+}
+
+function sw(tab,btn){
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+tab).classList.add('on');
+  btn.classList.add('on');
+  setTimeout(update,50);
+}
+
+Object.entries(S).forEach(([k,v])=>{
+  const e=document.getElementById('r-'+k);
+  if(e)e.value=k==='ppct'?v*100:(k==='lm'?v*100:v);
+  const ve=document.getElementById('v-'+k);
+  if(ve&&FMTS[k])ve.textContent=FMTS[k](v);
+});
+
+update();
+</script>
